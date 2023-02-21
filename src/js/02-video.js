@@ -1,4 +1,4 @@
-
+import throttle from "lodash.throttle";
 const iframe = document.querySelector('iframe');
     const player = new Vimeo.Player(iframe);
 
@@ -9,14 +9,12 @@ const iframe = document.querySelector('iframe');
     player.getVideoTitle().then(function(title) {
         console.log('title:', title);
     });
-
-    
+ 
 const onPlay = function (data) {
     localStorage.setItem(`videoplayer-current-time`, data.seconds);
-    console.log(localStorage.getItem(`videoplayer-current-time`)); 
 };
 
-player.on('timeupdate', onPlay);  
+player.on('timeupdate', throttle(onPlay, 1000));  
 
 player.setCurrentTime(localStorage.getItem(`videoplayer-current-time`)).then(function(seconds) {
 }).catch(function(error) {
@@ -28,5 +26,5 @@ player.setCurrentTime(localStorage.getItem(`videoplayer-current-time`)).then(fun
     }
 });
 
-// ніяк не виходить додати throttle в localStorage.setItem.
+
 

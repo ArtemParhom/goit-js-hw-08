@@ -1,4 +1,4 @@
-// import throttle from 'lodash.throttle';
+import throttle from "lodash.throttle";
 const refs = {
     form: document.querySelector(`.feedback-form`),
     input: document.querySelector(`input[name='email']`),
@@ -13,13 +13,11 @@ populateEmail();
 populateMessage();
 
 refs.form.addEventListener(`submit`, onFormSubmit);
-refs.input.addEventListener(`input`, onInputEmail);
-refs.textarea.addEventListener(`input`, onTextareaInput);
-// refs.input.addEventListener(`input`, throttle(onInputEmail, 500));
-// refs.textarea.addEventListener(`input`, throttle(onTextareaInput, 500));
+refs.input.addEventListener(`input`, throttle(onInputEmail, 500));
+refs.textarea.addEventListener(`input`, throttle(onTextareaInput, 500));
 
 
-function onFormSubmit(evt) {
+function onFormSubmit(evt) { 
     evt.preventDefault();
     evt.currentTarget.reset();
     // localStorage.removeItem(STORAGE_EMAIL);
@@ -27,12 +25,12 @@ function onFormSubmit(evt) {
 };
 
 function onInputEmail(evt) {
-    const valueEmail = evt.currentTarget.value;
-    localStorage.setItem(STORAGE_EMAIL, valueEmail);
+    const valueEmail = evt.target.value;
+    localStorage.setItem(STORAGE_EMAIL, valueEmail); 
 };
 
 function onTextareaInput(evt) {
-    const valueMessage = evt.currentTarget.value;
+    const valueMessage = evt.target.value;
     localStorage.setItem(STORAGE_MESSAGE, valueMessage);
 };
 
@@ -51,5 +49,5 @@ function populateMessage() {
 };
 
 
-// ніяк не виходить підключити lodash.throttle
+
  
