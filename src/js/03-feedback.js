@@ -14,6 +14,7 @@ refs.textarea.addEventListener(`input`, throttle(onInputEmail, 500));
 populateEmailMessage();
 
 function onFormSubmit(evt) { 
+    console.log(JSON.parse(localStorage.getItem(`feedback-form-state`)));
     evt.preventDefault();
     evt.currentTarget.reset();
     localStorage.removeItem(`feedback-form-state`)
