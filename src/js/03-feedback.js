@@ -1,53 +1,44 @@
 import throttle from "lodash.throttle";
+
+var feedbackObj = {};
 const refs = {
     form: document.querySelector(`.feedback-form`),
     input: document.querySelector(`input[name='email']`),
     textarea: document.querySelector(`textarea[name='message']`)
 };
 
-const STORAGE_EMAIL = `feedback-form-state`;
-
-const STORAGE_MESSAGE = `feedback-form-state-message`;
-
-populateEmail();
-populateMessage();
-
 refs.form.addEventListener(`submit`, onFormSubmit);
 refs.input.addEventListener(`input`, throttle(onInputEmail, 500));
-refs.textarea.addEventListener(`input`, throttle(onTextareaInput, 500));
+refs.textarea.addEventListener(`input`, throttle(onInputEmail, 500));
 
+populateEmailMessage();
 
 function onFormSubmit(evt) { 
     evt.preventDefault();
     evt.currentTarget.reset();
-    // localStorage.removeItem(STORAGE_EMAIL);
-    localStorage.removeItem(STORAGE_MESSAGE)
+    localStorage.removeItem(`feedback-form-state`)
 };
 
 function onInputEmail(evt) {
-    const valueEmail = evt.target.value;
-    localStorage.setItem(STORAGE_EMAIL, valueEmail); 
+    const evtName = evt.target.name;
+    const evtValue = evt.target.value;
+    if (evtValue) {
+        feedbackObj[evtName] = evtValue
+        localStorage.setItem(`feedback-form-state`, JSON.stringify(feedbackObj));
+     };   
 };
 
-function onTextareaInput(evt) {
-    const valueMessage = evt.target.value;
-    localStorage.setItem(STORAGE_MESSAGE, valueMessage);
-};
-
-function populateEmail() {
-    const savedEmail = localStorage.getItem(STORAGE_EMAIL);
-    if (savedEmail) {
-        refs.input.value = savedEmail;
-    }
-};
-
-function populateMessage() {
-    const savedMessage = localStorage.getItem(STORAGE_MESSAGE);
-    if (savedMessage) {
-        refs.textarea.value = savedMessage;
-    }
+function populateEmailMessage () {
+    const savedEmailMessage = localStorage.getItem(`feedback-form-state`);
+    const parseSavedEmailMessage = JSON.parse(savedEmailMessage);
+    if (parseSavedEmailMessage) {
+        if (parseSavedEmailMessage.email) {
+            refs.input.value = parseSavedEmailMessage.email;
+        };
+        if (parseSavedEmailMessage.message) {
+            refs.textarea.value = parseSavedEmailMessage.message;
+        };  
+    };
 };
 
 
-
- 
